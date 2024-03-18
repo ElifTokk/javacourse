@@ -27,7 +27,7 @@ public class Product extends BaseEntity implements Serializable {
     private Double price;
 
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch =FetchType.EAGER)
     private Set<OrderProduct> orderProducts = new HashSet<>();
 
 

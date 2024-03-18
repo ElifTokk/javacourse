@@ -10,7 +10,7 @@ public class OrderProduct extends BaseEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
