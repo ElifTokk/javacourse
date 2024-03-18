@@ -1,10 +1,10 @@
 package com.test.javacourse.MarketPlace.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "product")
 @Entity
@@ -25,6 +25,11 @@ public class Product extends BaseEntity implements Serializable {
     private String description;
 
     private Double price;
+
+
+    @OneToMany(mappedBy = "product")
+    private Set<OrderProduct> orderProducts = new HashSet<>();
+
 
     public String getName() {
         return name;
@@ -64,5 +69,13 @@ public class Product extends BaseEntity implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Set<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public void setOrderProducts(Set<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }

@@ -34,14 +34,11 @@ public class ProductService {
         product.setDescription(productSaveRequestDto.getDescription());
         product.setPhotoUrl(productSaveRequestDto.getPhotoUrl());
 
-        productRepository.saveProduct(product);
-
-
-        if(product.getId()>0){
-            System.out.println("İşleminiz Gerçekleşmiştir.");
-        }else {
-            System.out.println("İşlem Başarısız.");
-        }
-
+        productRepository.save(product);
     }
+
+    public Product findByProductId(Long product_id) {
+        return productRepository.findById(product_id).get();
+    }
+
 }

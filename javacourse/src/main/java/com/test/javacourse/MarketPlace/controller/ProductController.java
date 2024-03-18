@@ -21,7 +21,7 @@ public class ProductController {
         return new ArrayList<ProductInfoResponseDto>();
     } */
 
-    @PostMapping("/saveProduct")
+    @PostMapping("/save")
     public void saveProduct(@RequestBody ProductSaveRequestDto productSaveRequestDto) {
 
         productService.save(productSaveRequestDto);
