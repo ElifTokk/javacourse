@@ -20,7 +20,7 @@ public class Order extends BaseEntity implements Serializable {
     private Double totalAmount;
 
 
-    @OneToMany(mappedBy = "order", fetch =FetchType.EAGER)
+    @OneToMany(mappedBy = "order", cascade=CascadeType.ALL)
     private Set<OrderProduct> orderProducts = new HashSet<>();
 
     public String getOrderNumber() {

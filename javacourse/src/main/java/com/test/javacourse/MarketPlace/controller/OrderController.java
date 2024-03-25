@@ -21,4 +21,10 @@ public class OrderController {
         orderService.save(orderRequestDto);
     }
 
+
+
+    @DeleteMapping("/deleteOrderByOrderNumber")
+    public void deleteOrderByOrderNumber(@RequestParam Long orderId){
+       orderService.deleteOrderByOrderNumber(orderId);
+    }
 }

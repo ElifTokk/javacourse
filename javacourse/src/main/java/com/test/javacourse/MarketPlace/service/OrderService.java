@@ -38,4 +38,12 @@ public class OrderService {
 
 
     }
+
+
+    public void deleteOrderByOrderNumber(Long orderId) {
+        Order order = orderRepository.findById(orderId).get();
+        orderRepository.delete(order);
+    }
+
+
 }
