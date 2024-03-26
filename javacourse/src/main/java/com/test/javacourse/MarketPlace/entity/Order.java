@@ -19,8 +19,10 @@ public class Order extends BaseEntity implements Serializable {
     private String orderDescription;
     private Double totalAmount;
 
+    @ManyToOne
+    private Users users;
 
-    @OneToMany(mappedBy = "order", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderProduct> orderProducts = new HashSet<>();
 
     public String getOrderNumber() {
@@ -61,5 +63,13 @@ public class Order extends BaseEntity implements Serializable {
 
     public void setOrderProducts(Set<OrderProduct> orderProducts) {
         this.orderProducts = orderProducts;
+    }
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
     }
 }

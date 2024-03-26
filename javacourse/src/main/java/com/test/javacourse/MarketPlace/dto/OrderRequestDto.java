@@ -5,6 +5,8 @@ public class OrderRequestDto {
     private Long productId;
     private String orderDescription;
 
+    private Long userId;
+
     public Long getProductId() {
         return productId;
     }
@@ -19,5 +21,13 @@ public class OrderRequestDto {
 
     public void setOrderDescription(String orderDescription) {
         this.orderDescription = orderDescription;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
