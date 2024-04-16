@@ -7,9 +7,14 @@ import com.test.javacourse.MarketPlace.entity.Product;
 import com.test.javacourse.MarketPlace.entity.Users;
 import com.test.javacourse.MarketPlace.exceptionHandling.BusinessException;
 import com.test.javacourse.MarketPlace.repository.OrderRepository;
+import com.test.javacourse.MarketPlace.service.shipping.MNGShippingStrategy;
+import com.test.javacourse.MarketPlace.service.shipping.SRTShippingStrategy;
+import com.test.javacourse.MarketPlace.service.shipping.ShippingCostCalculator;
+import com.test.javacourse.MarketPlace.service.shipping.YRTShippingStrategy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,8 +65,47 @@ public class OrderService {
         }
 
     }
+    public void getCargoOffer(Order order, Users users) {
 
 
+        Order orders = orderRepository.findById(order.getId()).get();
+        List<OrderProduct> orderProductList = orderProductService.findAllByOrder(orders);
+
+        int totalWeigth = 0;
+        for (OrderProduct orderProduct : orderProductList) {
+            Product product = orderProduct.getProduct();
+            int weight = product.getWeight();
+            totalWeigth += weight;
+
+        }
+        ShippingCostCalculator calculator = null;
+
+        if (users.isPremium()) {
+            calculator = new ShippingCostCalculator(new MNGShippingStrategy());
+            System.out.println("MNG Shipping Cost: " + calculator.calculateCost(totalWeigth));
+            order.setTotalAmount(calculator.calculateCost(totalWeigth));
+            return;
+        }
+
+        if (totalWeigth > 200) {
+            throw new BusinessException("Ürün ağırlığı fazla.Lütfen farklı bir kargo seçeneği ile ilerleyin");
+        }
+
+        calculate(order, totalWeigth);
+
+    }
+    private void calculate(Order order, int totalWeigth) {
+        ShippingCostCalculator calculator;
+        if(totalWeigth > 0 && totalWeigth <= 100){
+            calculator = new ShippingCostCalculator(new SRTShippingStrategy());
+            order.setTotalAmount(calculator.calculateCost(totalWeigth));
+
+        }else if(totalWeigth > 100 && totalWeigth < 200){
+            calculator = new ShippingCostCalculator(new YRTShippingStrategy());
+            order.setTotalAmount(calculator.calculateCost(totalWeigth));
+
+        }
+    }
 
     public void sendSms(Order order, Users user) throws Exception {
 

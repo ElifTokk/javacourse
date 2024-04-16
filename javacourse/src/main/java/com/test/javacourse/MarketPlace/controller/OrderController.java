@@ -9,22 +9,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/order")
 public class OrderController {
 
-private final OrderService orderService;
+    private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
+
         this.orderService = orderService;
     }
 
 
     @PostMapping("/save")
     public void save(@RequestBody OrderRequestDto orderRequestDto) {
-            orderService.save(orderRequestDto);
+
+        orderService.save(orderRequestDto);
     }
 
 
-
     @DeleteMapping("/deleteOrderByOrderNumber")
-    public void deleteOrderByOrderNumber(@RequestParam Long orderId){
-       orderService.deleteOrderByOrderNumber(orderId);
+    public void deleteOrderByOrderNumber(@RequestParam Long orderId) {
+        orderService.deleteOrderByOrderNumber(orderId);
     }
 }
