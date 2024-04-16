@@ -41,7 +41,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void save(OrderRequestDto orderRequestDto)  {
+    public void save(OrderRequestDto orderRequestDto) {
         Order order = new Order();
         order.setOrderDescription(orderRequestDto.getOrderDescription());
 
@@ -64,7 +64,9 @@ public class OrderService {
             throw new RuntimeException(e);
         }
 
+        getCargoOffer(order, users);
     }
+
     public void getCargoOffer(Order order, Users users) {
 
 
@@ -94,13 +96,14 @@ public class OrderService {
         calculate(order, totalWeigth);
 
     }
+
     private void calculate(Order order, int totalWeigth) {
         ShippingCostCalculator calculator;
-        if(totalWeigth > 0 && totalWeigth <= 100){
+        if (totalWeigth > 0 && totalWeigth <= 100) {
             calculator = new ShippingCostCalculator(new SRTShippingStrategy());
             order.setTotalAmount(calculator.calculateCost(totalWeigth));
 
-        }else if(totalWeigth > 100 && totalWeigth < 200){
+        } else if (totalWeigth > 100 && totalWeigth < 200) {
             calculator = new ShippingCostCalculator(new YRTShippingStrategy());
             order.setTotalAmount(calculator.calculateCost(totalWeigth));
 
@@ -111,7 +114,7 @@ public class OrderService {
 
         if (user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) {
             throw new BusinessException("Telefon numaranız sistemde kayıtlı olmadığı için sipariş oluşturulamadı!");
-        }else {
+        } else {
             smsService.sendSmsUser(order, user);
         }
 
