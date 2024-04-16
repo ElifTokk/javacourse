@@ -5,8 +5,10 @@ import com.test.javacourse.MarketPlace.entity.Order;
 import com.test.javacourse.MarketPlace.entity.OrderProduct;
 import com.test.javacourse.MarketPlace.entity.Product;
 import com.test.javacourse.MarketPlace.entity.Users;
+import com.test.javacourse.MarketPlace.exceptionHandling.BusinessException;
 import com.test.javacourse.MarketPlace.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -33,14 +35,14 @@ public class OrderService {
         this.smsService = smsService;
     }
 
-
-    public void save(OrderRequestDto orderRequestDto) {
+    @Transactional
+    public void save(OrderRequestDto orderRequestDto)  {
         Order order = new Order();
         order.setOrderDescription(orderRequestDto.getOrderDescription());
 
 
         Optional<Users> user = userService.findUserById(orderRequestDto.getUserId());
-        Users users = user.get();
+        Users users = user.orElseThrow(() -> new RuntimeException("Verdiğiniz ID ye ait kullanıcı bulunamamaktadır!"));
         order.setUsers(users);
         orderRepository.save(order);
         Product product = productService.findByProductId(orderRequestDto.getProductId());
@@ -51,16 +53,30 @@ public class OrderService {
 
         orderProductService.save(orderProduct);
 
-        smsService.sendSmsUser(order, users);
+        try {
+            sendSms(order, users);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+
+    public void sendSms(Order order, Users user) throws Exception {
+
+        if (user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) {
+            throw new BusinessException("Telefon numaranız sistemde kayıtlı olmadığı için sipariş oluşturulamadı!");
+        }else {
+            smsService.sendSmsUser(order, user);
+        }
+
 
     }
 
 
     public void deleteOrderByOrderNumber(Long orderId) {
-        Order order =
-
-
-                orderRepository.findById(orderId).get();
+        Order order = orderRepository.findById(orderId).get();
         orderRepository.delete(order);
     }
 

@@ -2,6 +2,7 @@ package com.test.javacourse.MarketPlace.service;
 
 import com.test.javacourse.MarketPlace.dto.ProductSaveRequestDto;
 import com.test.javacourse.MarketPlace.entity.Product;
+import com.test.javacourse.MarketPlace.entity.Users;
 import com.test.javacourse.MarketPlace.repository.ProductRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,8 @@ public class ProductService {
     }
 
     public Product findByProductId(Long product_id) {
-        return productRepository.findById(product_id).get();
+        Product product = productRepository.findById(product_id).get();
+        return product;
     }
 
 }
